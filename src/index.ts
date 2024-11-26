@@ -12,7 +12,7 @@ app.use((req, res, next) => {
   });
 
 // Defina explicitamente o tipo de `valorArmazenado`
-let valorArmazenado: number | null = null; // Pode armazenar um número ou `null`
+let valorArmazenado: number | null = null;
 
 // Endpoint para armazenar o valor enviado pelo ESP32
 app.post('/armazenar', (req, res) => {
