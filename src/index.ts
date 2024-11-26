@@ -9,36 +9,30 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Permite métodos específicos
     res.header('Access-Control-Allow-Headers', 'Content-Type'); // Permite cabeçalhos específicos
     next();
-});
+  });
 
-// Definindo explicitamente o tipo de mensagens
-interface Mensagem {
-    user: string;
-    message: string;
-}
+// Defina explicitamente o tipo de `valorArmazenado`
+let valorArmazenado: string | null = null;
 
-let mensagens: Mensagem[] = []; // Array de objetos do tipo Mensagem
-
-// Endpoint para armazenar mensagens enviadas pelo cliente
+// Endpoint para armazenar o valor enviado pelo ESP32
 app.post('/armazenar', (req, res) => {
-    const { user, message } = req.body;
+    const { valor } = req.body;
 
-    if (typeof user === 'string' && typeof message === 'string') {
-        mensagens.push({ user, message });
-        console.log('Mensagem armazenada:', { user, message });
-        res.status(200).send({ success: true, message: 'Mensagem armazenada' });
+    if (typeof valor === 'string') {
+        valorArmazenado = valor;
+        console.log(`${valorArmazenado}`);
+        res.status(200).send('Mensagem enviada com sucesso');
     } else {
-        console.error('Mensagem inválida:', req.body);
-        res.status(400).send({ error: 'Formato de mensagem inválido' });
+        res.status(400).send('Formato de mensagem inválido');
     }
 });
 
-// Endpoint para obter todas as mensagens armazenadas
+// Endpoint para obter o valor armazenado
 app.get('/receber', (req, res) => {
-    if (mensagens.length > 0) {
-        res.status(200).json(mensagens); // Retorna todas as mensagens como JSON
+    if (valorArmazenado !== null) {
+        res.status(200).send(valorArmazenado.toString());
     } else {
-        res.status(404).send('Nenhuma mensagem armazenada');
+        res.status(404).send('Nenhum mensagem armazenada');
     }
 });
 
