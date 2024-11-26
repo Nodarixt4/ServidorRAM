@@ -12,27 +12,27 @@ app.use((req, res, next) => {
   });
 
 // Defina explicitamente o tipo de `valorArmazenado`
-let valorArmazenado: number | null = null;
+let valorArmazenado: string | null = null;
 
 // Endpoint para armazenar o valor enviado pelo ESP32
 app.post('/armazenar', (req, res) => {
     const { valor } = req.body;
 
-    if (typeof valor === 'number') {
+    if (typeof valor === 'string') {
         valorArmazenado = valor;
-        console.log(`Valor armazenado: ${valorArmazenado}`);
-        res.status(200).send('Valor armazenado com sucesso');
+        console.log(`${valorArmazenado}`);
+        res.status(200).send('Mensagem enviada com sucesso');
     } else {
-        res.status(400).send('Formato de valor inválido');
+        res.status(400).send('Formato de mensagem inválido');
     }
 });
 
 // Endpoint para obter o valor armazenado
-app.get('/temperatura', (req, res) => {
+app.get('/receber', (req, res) => {
     if (valorArmazenado !== null) {
         res.status(200).send(valorArmazenado.toString());
     } else {
-        res.status(404).send('Nenhum valor armazenado');
+        res.status(404).send('Nenhum mensagem armazenada');
     }
 });
 
